@@ -1,0 +1,27 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Primeira rede social</title>
+
+        <script src="/socket.io/socket.io.js"></script>
+    </head>
+    <body>
+        <script type="module">
+            import createPost from './postagem.js'
+
+            const post = createPost()
+            
+            const socket = io()
+            socket.on('connect', () => {
+                const userId = socket.id
+                console.log('User connected on Client with id: ', userId)
+            })
+
+            socket.on('setup', (state) => {
+                    console.log('> Receivind "setup" event from server')
+                    console.log(state)
+                    post.setPlataforma(state)
+                })
+        </script>
+    </body>
+</html>
