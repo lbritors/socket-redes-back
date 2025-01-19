@@ -8,13 +8,13 @@ const app = express()
 const server = createServer(app)
 const io = new Server(server, {
   cors: {
-    origin: '*',
+    origin: 'https://9000-lbritors-socketredesfro-cisq609mlot.ws-us117.gitpod.io',
     methods: ['GET', 'POST'],
   },
   pingTimeout: 60000,
 })
 
-app.use(cors({ origin: '*' }));
+app.use(cors({ origin: 'https://9000-lbritors-socketredesfro-cisq609mlot.ws-us117.gitpod.io' }));
 
 app.get("/", (req, res) => {
   res.send("Server running");
@@ -26,6 +26,8 @@ io.on('connection', (socket) => {
     socket.emit('setup', posts);
   });
 
+  io.emit('setup', setPostagens());
+
   socket.on('message', (postagem) => {
     console.log("Message received: ", postagem);
     addPostagem({
@@ -33,10 +35,6 @@ io.on('connection', (socket) => {
       autor: postagem.autor,
       content: postagem.content,
     })
-
-    
-    io.emit('setup', setPostagens());
-    
   })
 
   socket.on("disconnect", () => {
