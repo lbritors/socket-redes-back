@@ -8,13 +8,13 @@ const app = express()
 const server = createServer(app)
 const io = new Server(server, {
   cors: {
-    origin: 'https://9000-lbritors-socketredesfro-cisq609mlot.ws-us117.gitpod.io',
+    origin: 'https://9000-lbritors-socketredesfro-apj4ev6uwpj.ws-us117.gitpod.io',
     methods: ['GET', 'POST'],
   },
   pingTimeout: 60000,
 })
 
-app.use(cors({ origin: 'https://9000-lbritors-socketredesfro-cisq609mlot.ws-us117.gitpod.io' }));
+app.use(cors({ origin: 'https://9000-lbritors-socketredesfro-apj4ev6uwpj.ws-us117.gitpod.io'}));
 
 app.get("/", (req, res) => {
   res.send("Server running");

@@ -9,7 +9,9 @@ ports:
     onOpen: open-preview
 
 tasks:
-  - init: npm install
+  - init: |
+      # Certifique-se de que o diretório persistente existe
+      mkdir -p .gitpod/data
+      npm install
     command: npm run dev
-
 
