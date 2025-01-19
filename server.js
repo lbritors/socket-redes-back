@@ -1,8 +1,8 @@
 import express from 'express'
 import { createServer } from 'node:http'
 import { Server } from 'socket.io'
-import createPost from './public/postagem.js'
 import cors from 'cors'
+import { setPostagens, addPostagem } from './public/postagem.js'
 
 const app = express()
 const server = createServer(app)
@@ -11,9 +11,8 @@ const io = new Server(server, {
     origin: '*',
     methods: ['GET', 'POST'],
   },
+  pingTimeout: 60000,
 })
-
-const bancoPosts = createPost
 
 app.use(cors({ origin: '*' }));
 
@@ -21,25 +20,23 @@ app.get("/", (req, res) => {
   res.send("Server running");
 });
 
-io.on('connect', () => {
+io.on('connection', (socket) => {
   console.log("A user connected");
-  bancoPosts.setPostagem()
+  setPostagens().then((posts)=> {
+    socket.emit('setup', posts);
+  });
 
-  io.emit('setup', bancoPosts.state)
-
-
-  io.on('message', (postagem) => {
+  socket.on('message', (postagem) => {
     console.log("Message received: ", postagem);
-    bancoPosts.addPostagem({
-      id: postagem.id,
+    addPostagem({
       title: postagem.title,
       autor: postagem.autor,
-      content: postagem.editor,
+      content: postagem.content,
     })
 
-    bancoPosts.setPostagem()
-
-    io.emit('setup', bancoPosts.state)
+    
+    io.emit('setup', setPostagens());
+    
   })
 
   socket.on("disconnect", () => {
